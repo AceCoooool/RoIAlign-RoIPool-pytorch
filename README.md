@@ -20,7 +20,7 @@ python setup.py install
 
 The "strategy" of roi-pooling in this implementaion likes the follow picture:（:joy: so bad picture）
 
-![oi_poo](/home/ace/GitOwn/RoI-op-pytorch/png/roi_pool.png)
+![oi_poo](png/roi_pool.png)
 
 Note:  (please stand on point view rather than block view)
 
@@ -29,7 +29,7 @@ Note:  (please stand on point view rather than block view)
 
 ## RoI Align
 
-![oialig](/home/ace/GitOwn/RoI-op-pytorch/png/roialign.png)
+![oialig](png/roialign.png)
 
 Note: left `sample=1`, `right sample=2`
 
