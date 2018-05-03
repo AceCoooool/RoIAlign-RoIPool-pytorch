@@ -106,9 +106,9 @@ roi_align_forward_kernel(const int total, const T *input, const T *rois, const T
 
 at::Tensor roi_align_forward_cuda(const at::Tensor &input, const at::Tensor &rois, int64_t pool_h, int64_t pool_w,
                                   double scale, int64_t sampling) {
-    AT_ASSERT(input.ndimension() == 4 && input.is_contiguous(), "Input features should be BxCxHxW and contiguous");
-    AT_ASSERT(rois.ndimension() == 2 && rois.size(1) == 5, "ROIs should be Kx5 forms");
-    AT_ASSERT(rois.is_contiguous(), "ROIs should be contiguous");
+    AT_CHECK(input.ndimension() == 4 && input.is_contiguous(), "Input features should be BxCxHxW and contiguous");
+    AT_CHECK(rois.ndimension() == 2 && rois.size(1) == 5, "ROIs should be Kx5 forms");
+    AT_CHECK(rois.is_contiguous(), "ROIs should be contiguous");
 
     auto rois_num = rois.size(0);
     auto channel = input.size(1), h = input.size(2), w = input.size(3);
@@ -122,7 +122,7 @@ at::Tensor roi_align_forward_cuda(const at::Tensor &input, const at::Tensor &roi
     roi_align_forward_kernel << < blocks, threads >> > (output.numel(), input.data<float>(), rois.data<float>(),
             static_cast<float>(scale), channel, h, w, pool_h, pool_w, sampling, output.data<float>());
 
-    AT_ASSERT(cudaGetLastError() == cudaSuccess, "roi_align_forward_kernel failed");
+    AT_CHECK(cudaGetLastError() == cudaSuccess, "roi_align_forward_kernel failed");
     return output;
 }
 /* ------------------------------end of the forward--------------------------- */
@@ -229,8 +229,8 @@ __global__ void roi_align_backward_kernel(const int total, const T *grad_out, co
 at::Tensor roi_align_backward_cuda(const at::Tensor &rois, const at::Tensor &grad_out, int64_t b_size, int64_t channel,
                                    int64_t h, int64_t w, int64_t pool_h, int64_t pool_w, double scale,
                                    int64_t sampling) {
-    AT_ASSERT(rois.ndimension() == 2 && rois.size(1) == 5, "ROIs should be Kx5 forms");
-    AT_ASSERT(rois.is_contiguous(), "ROIs should be contiguous");
+    AT_CHECK(rois.ndimension() == 2 && rois.size(1) == 5, "ROIs should be Kx5 forms");
+    AT_CHECK(rois.is_contiguous(), "ROIs should be contiguous");
 
     auto rois_num = rois.size(0), rois_col = rois.size(1);
 
@@ -245,6 +245,6 @@ at::Tensor roi_align_backward_cuda(const at::Tensor &rois, const at::Tensor &gra
             static_cast<float>(scale), channel, h, w, pool_h, pool_w, sampling, grad_in.data<float>(),
             rois.data<float>(), rois_col);
 
-    AT_ASSERT(cudaGetLastError() == cudaSuccess, "roi_align_forward_kernel failed");
+    AT_CHECK(cudaGetLastError() == cudaSuccess, "roi_align_forward_kernel failed");
     return grad_in;
 }

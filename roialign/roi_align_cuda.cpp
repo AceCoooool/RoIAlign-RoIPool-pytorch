@@ -10,8 +10,8 @@ at::Tensor roi_align_backward_cuda(const at::Tensor &rois, const at::Tensor &gra
 
 
 // C++ interface
-#define CHECK_CUDA(x) AT_ASSERT(x.type().is_cuda(), #x " must be a CUDA tensor")
-#define CHECK_CONTIGUOUS(x) AT_ASSERT(x.is_contiguous(), #x " must be contiguous")
+#define CHECK_CUDA(x) AT_CHECK(x.type().is_cuda(), #x " must be a CUDA tensor")
+#define CHECK_CONTIGUOUS(x) AT_CHECK(x.is_contiguous(), #x " must be contiguous")
 #define CHECK_INPUT(x) CHECK_CUDA(x); CHECK_CONTIGUOUS(x)
 
 at::Tensor roi_align_forward(const at::Tensor &input, const at::Tensor &rois, int64_t pool_h, int64_t pool_w,

@@ -124,11 +124,11 @@ void roi_align_forward(const T *feat, const T *rois, const vector<int64_t> &feat
 // input: BxCxHxW;  rois: Kx5
 at::Tensor roi_align_forward_cpu(const at::Tensor &feat, const at::Tensor &rois, int64_t pool_h, int64_t pool_w,
                                  double scale, int64_t sample) {
-    AT_ASSERT(feat.ndimension() == 4, "Feature should be BxCxHxW forms");
-    AT_ASSERT(feat.is_contiguous(), "Feature should be contiguous");
-    AT_ASSERT(rois.ndimension() == 2, "ROI Proposals should be Kx5 forms");
-    AT_ASSERT(rois.size(1) == 5, "ROI proposals should be Kx5 forms");
-    AT_ASSERT(rois.is_contiguous(), "ROI proposals should be contiguous.");
+    AT_CHECK(feat.ndimension() == 4, "Feature should be BxCxHxW forms");
+    AT_CHECK(feat.is_contiguous(), "Feature should be contiguous");
+    AT_CHECK(rois.ndimension() == 2, "ROI Proposals should be Kx5 forms");
+    AT_CHECK(rois.size(1) == 5, "ROI proposals should be Kx5 forms");
+    AT_CHECK(rois.is_contiguous(), "ROI proposals should be contiguous.");
 
     const vector<int64_t> rois_size = {rois.size(0), rois.size(1), pool_h, pool_w};
     const vector<int64_t> feat_size = {feat.size(0), feat.size(1), feat.size(2), feat.size(3)};
@@ -230,8 +230,8 @@ void roi_align_backward(int total, const T *rois, T *grad_out, const T &scale, c
 at::Tensor
 roi_align_backward_cpu(const at::Tensor &rois, const at::Tensor &grad_out, int64_t b_size, int64_t channel,
                        int64_t h, int64_t w, int64_t pool_h, int64_t pool_w, double scale, int64_t sample) {
-    AT_ASSERT(rois.ndimension() == 2 && rois.size(1) == 5, "ROI Proposals should be Kx5 forms")
-    AT_ASSERT(rois.is_contiguous(), "ROI proposals should be contiguous.")
+    AT_CHECK(rois.ndimension() == 2 && rois.size(1) == 5, "ROI Proposals should be Kx5 forms")
+    AT_CHECK(rois.is_contiguous(), "ROI proposals should be contiguous.")
     auto rois_col = rois.size(1);
     auto grad_in = rois.type().tensor({b_size, channel, h, w});
     grad_in.zero_();

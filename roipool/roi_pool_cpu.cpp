@@ -76,11 +76,11 @@ void roi_pool_forward(const T *input, const T *rois, vector<int64_t> in_size, ve
 
 at::Tensor roi_pool_forward_cpu(const at::Tensor &input, const at::Tensor &rois, int64_t pool_h, int64_t pool_w,
                                 double scale, at::Tensor &memory) {
-    AT_ASSERT(input.ndimension() == 4, "Feature should be BxCxHxW forms");
-    AT_ASSERT(input.is_contiguous(), "Feature should be contiguous");
-    AT_ASSERT(rois.ndimension() == 2, "ROI Proposals should be Kx5 forms");
-    AT_ASSERT(rois.size(1) == 5, "ROI proposals should be Kx5 forms");
-    AT_ASSERT(rois.is_contiguous(), "ROI proposals should be contiguous.");
+    AT_CHECK(input.ndimension() == 4, "Feature should be BxCxHxW forms");
+    AT_CHECK(input.is_contiguous(), "Feature should be contiguous");
+    AT_CHECK(rois.ndimension() == 2, "ROI Proposals should be Kx5 forms");
+    AT_CHECK(rois.size(1) == 5, "ROI proposals should be Kx5 forms");
+    AT_CHECK(rois.is_contiguous(), "ROI proposals should be contiguous.");
 
     const vector<int64_t> rois_size = {rois.size(0), rois.size(1), pool_h, pool_w};
     const vector<int64_t> input_size = {input.size(0), input.size(1), input.size(2), input.size(3)};
@@ -125,11 +125,11 @@ void roi_pool_backward(const int total, const T *grad_out, const T *rois, const 
 
 at::Tensor roi_pool_backward_cpu(const at::Tensor &rois, const at::Tensor &grad_out, int64_t b_size, int64_t channel,
                                  int64_t h, int64_t w, int64_t pool_h, int64_t pool_w, at::Tensor &memory) {
-    AT_ASSERT(grad_out.ndimension() == 4, "Feature should be BxCxHxW forms");
-    AT_ASSERT(grad_out.is_contiguous(), "Feature should be contiguous");
-    AT_ASSERT(rois.ndimension() == 2, "ROI Proposals should be Kx5 forms");
-    AT_ASSERT(rois.size(1) == 5 && rois.is_contiguous(), "ROI proposals should be Kx5 forms and contiguous");
-    AT_ASSERT(memory.is_contiguous(), "Memory should be contiguous.");
+    AT_CHECK(grad_out.ndimension() == 4, "Feature should be BxCxHxW forms");
+    AT_CHECK(grad_out.is_contiguous(), "Feature should be contiguous");
+    AT_CHECK(rois.ndimension() == 2, "ROI Proposals should be Kx5 forms");
+    AT_CHECK(rois.size(1) == 5 && rois.is_contiguous(), "ROI proposals should be Kx5 forms and contiguous");
+    AT_CHECK(memory.is_contiguous(), "Memory should be contiguous.");
 
 
     auto grad_in = grad_out.type().tensor({b_size, channel, h, w});

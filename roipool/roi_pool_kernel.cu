@@ -73,8 +73,8 @@ roi_pool_forward_kernel(const int total, const T *input, const T *rois, const T 
 // TODO: there may be a bug
 at::Tensor roi_pool_forward_cuda(const at::Tensor &input, const at::Tensor &rois, int64_t pool_h, int64_t pool_w,
                                  double scale, at::Tensor &memory) {
-    AT_ASSERT(input.ndimension() == 4, "Input features should be BxCxHxW");
-    AT_ASSERT(rois.ndimension() == 2 && rois.size(1) == 5, "ROIs should be Kx5 forms");
+    AT_CHECK(input.ndimension() == 4, "Input features should be BxCxHxW");
+    AT_CHECK(rois.ndimension() == 2 && rois.size(1) == 5, "ROIs should be Kx5 forms");
 
     auto rois_num = rois.size(0);
     auto channel = input.size(1), h = input.size(2), w = input.size(3);
@@ -88,7 +88,7 @@ at::Tensor roi_pool_forward_cuda(const at::Tensor &input, const at::Tensor &rois
     roi_pool_forward_kernel << < blocks, threads >> > (output.numel(), input.data<float>(), rois.data<float>(),
             static_cast<float>(scale), channel, h, w, pool_h, pool_w, output.data<float>(), memory.data<int>());
 
-    AT_ASSERT(cudaGetLastError() == cudaSuccess, "roi_align_forward_kernel failed");
+    AT_CHECK(cudaGetLastError() == cudaSuccess, "roi_align_forward_kernel failed");
     return output;
 }
 /* ------------------------------end of the forward--------------------------- */
@@ -123,8 +123,8 @@ __global__ void roi_pool_backward_kernel(const int total, const T *grad_out, con
 
 at::Tensor roi_pool_backward_cuda(const at::Tensor &rois, const at::Tensor &grad_out, int64_t b_size, int64_t channel,
                                   int64_t h, int64_t w, int64_t pool_h, int64_t pool_w, const at::Tensor &memory) {
-    AT_ASSERT(rois.ndimension() == 2 && rois.size(1) == 5, "ROIs should be Kx5 forms");
-    AT_ASSERT(rois.is_contiguous(), "ROIs should be contiguous");
+    AT_CHECK(rois.ndimension() == 2 && rois.size(1) == 5, "ROIs should be Kx5 forms");
+    AT_CHECK(rois.is_contiguous(), "ROIs should be contiguous");
 
     auto grad_in = rois.type().tensor({b_size, channel, h, w});
     grad_in.zero_();
@@ -137,6 +137,6 @@ at::Tensor roi_pool_backward_cuda(const at::Tensor &rois, const at::Tensor &grad
             grad_out.data<float>(), rois.data<float>(), channel, h, w, pool_h, pool_w, grad_in.data<float>(),
             memory.data<int>());
 
-    AT_ASSERT(cudaGetLastError() == cudaSuccess, "roi_align_forward_kernel failed");
+    AT_CHECK(cudaGetLastError() == cudaSuccess, "roi_align_forward_kernel failed");
     return grad_in;
 }
