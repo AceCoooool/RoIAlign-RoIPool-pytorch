@@ -1,6 +1,8 @@
 # RoI-op-pytorch
 C++ extension of RoIPool & RoIAlign (both CPU and GPU) in PyTorch，this code is converted from [caffe2](https://github.com/pytorch/pytorch/tree/master/caffe2/operators) operation. （need pytorch 0.4.0）
 
+**Warning：**You may change `AT_CHECK` to `AT_ASSERT`（0.4 version using `AT_ASSERT`， and latest version using `AT_CHECK`）
+
 **Note: **
 
 1. `roi_xxx_cpu.cpp`&`roi_xxx_binding.cpp`：contains the cpu version of forward and backward operation.(Note: `roi_xxx_binding.cpp` is for pybind, you can put this code into `roi_xxx_cpu.cpp` as well) 
