@@ -31,6 +31,7 @@ void pre_calc_for_bilinear(const int h, const int w, const int pool_h, const int
                     if (y < -1.0 || y > h || x < -1.0 || x > w) {
                         PreCalc<T> pc{0, 0, 0, 0, 0, 0, 0, 0};
                         pre_calc[idx] = pc;
+                        idx += 1;
                         continue;
                     }
                     // not exceed 1.0
