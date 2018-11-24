@@ -114,7 +114,8 @@ void roi_pool_backward(const int total, const T *grad_out, const T *rois, const 
 
         const T *offset_grad_out = grad_out + grad_out_offset;
         T *offset_grad_in = grad_in + grad_in_offset;
-        const int *offset_memory = memory + grad_in_offset;
+        //const int *offset_memory = memory + grad_in_offset;
+        const int *offset_memory = memory + grad_out_offset
 
         int argmax = offset_memory[ph * pool_w + pw];
         if (argmax != -1)
